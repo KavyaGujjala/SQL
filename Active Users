@@ -1,0 +1,7 @@
+# Write your MySQL query statement below
+with temp as (
+select a.id, a.name, l.login_date from accounts as a join logins as l on a.id=l.id group by a.id, l.login_date order by a.id, l.login_date
+    )
+select distinct id, name from (
+select *, lead(login_date, 4) over(partition by id) as date_rank from temp
+) as temp2 where datediff(temp2.date_rank,temp2.login_date)=4
