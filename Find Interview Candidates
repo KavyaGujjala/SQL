@@ -1,0 +1,5 @@
+with temp as(
+select u.user_id, u.mail, u.name, contest_id, user_id=gold_medal as gold,  user_id=silver_medal as silver, user_id=bronze_medal as bronze from users as u left join contests on user_id=gold_medal or user_id=silver_medal or user_id=bronze_medal)
+
+select distinct t.name, t.mail from (
+select *, lead(contest_id, 2) over(partition by user_id order by contest_id) as contest_2, sum(gold) over(partition by user_id) as gold_count from temp)  as t where (t.contest_2=t.contest_id+2) or t.gold_count>=3
