@@ -1,0 +1,5 @@
+# Write your MySQL query statement below
+with temp as (
+select user_id, s.time_stamp, c.time_stamp as cf_ts, action from signups as s left join confirmations as c using(user_id)
+)
+select user_id, round(sum(case when action='confirmed' then 1 else 0 end)/count(*), 2) as confirmation_rate from temp group by user_id
