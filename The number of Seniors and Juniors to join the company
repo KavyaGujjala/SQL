@@ -1,0 +1,9 @@
+# Write your MySQL query statement below
+with temp as (
+select *, sum(t1.salary) over(partition by t1.experience order by t1.rank) as 'running_total' from 
+(select *, row_number() over() as 'rank' from candidates order by experience asc, salary asc) as t1
+    )
+
+select 'Senior' as 'experience', count(employee_id) as 'accepted_candidates' from temp where experience='Senior' and running_total<=70000
+union
+select 'Junior' as 'experience', count(employee_id) as 'accepted_candidates' from temp where experience='Junior' and running_total<= (select 70000-(select ifnull(max(running_total), 0) from temp where experience='Senior' and running_total<=70000))
