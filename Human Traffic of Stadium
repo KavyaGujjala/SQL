@@ -1,0 +1,14 @@
+# Write your MySQL query statement below
+/*select id, visit_date, people from (
+select *, 
+lag(id) over(order by id)as 'lag1', 
+lead(id) over(order by id)as 'lead1', 
+lead(id, 2) over(order by id)as 'lead2', 
+lag(id, 2) over(order by id)as 'lag2' from stadium where people>=100
+    ) as t where (id=lag1+1 and id=lead1-1) or (id=lead2-2) or (id=lag2+2)*/
+    
+with temp as (
+select *, (id-row_number() over(order by visit_date)) as diff from stadium where people>=100
+)
+
+select id, visit_date, people from temp where diff in (select diff from temp group by diff having count(diff)>=3)
