@@ -1,0 +1,5 @@
+# Write your MySQL query statement below
+with temp as (
+select *, avg(quantity) as 'average', max(quantity) as 'maximum' from ordersdetails group by order_id
+    )
+select order_id from temp where maximum>(select max(average) from temp)
