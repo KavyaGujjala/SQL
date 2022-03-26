@@ -1,0 +1,5 @@
+# Write your MySQL query statement below
+select e1.employee_id from employees e1 
+join (select employee_id, manager_id as 'mid2' from employees) e2 on e1.manager_id=e2.employee_id
+join (select employee_id, manager_id as 'mid3' from employees) e3 on e2.mid2=e3.employee_id 
+where e1.employee_id<>1 and e3.mid3=1
